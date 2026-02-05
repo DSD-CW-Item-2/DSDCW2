@@ -1,5 +1,3 @@
-CREATE DATABASE DSDCW2;
-
 CREATE TABLE outlet (
     outlet_id SERIAL PRIMARY KEY,
     outlet_address VARCHAR(70) NOT NULL UNIQUE
