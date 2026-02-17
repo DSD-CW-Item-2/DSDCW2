@@ -79,7 +79,9 @@ CREATE TABLE delivery_stops (
 );
 
 -- Indexes
-CREATE INDEX idx_customer_name ON customer(customer_last_name, customer_first_name);
+CREATE INDEX idx_customer_first_name ON customer(customer_first_name);
+
+CREATE INDEX idx_customer_last_name ON customer(customer_last_name);
 
 CREATE INDEX idx_product_name ON product(prod_name);
 
