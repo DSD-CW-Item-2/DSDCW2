@@ -6,7 +6,7 @@ CREATE TABLE customer (
   customer_last_name VARCHAR(50) NOT NULL,
   customer_address VARCHAR(70) NOT NULL,
   customer_email VARCHAR(50) UNIQUE NOT NULL,
-  customer_phone_number VARCHAR(11) UNIQUE,
+  customer_phone_number CHAR(11) UNIQUE,
   CHECK (customer_phone_number ~ '^[0-9]{11}$')
 );
 
@@ -16,7 +16,7 @@ CREATE TABLE outlet (
   customer_id INT NOT NULL REFERENCES customer(customer_id)
 );
 
-CREATE TABLE product (
+CREATE TABLE products (
   prod_id SERIAL PRIMARY KEY,
   prod_name VARCHAR(50) NOT NULL,
   prod_price DECIMAL(10, 2) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE orders (
 CREATE TABLE order_line (
   order_line_id SERIAL PRIMARY KEY,
   quantity INT NOT NULL,
-  prod_id INT NOT NULL REFERENCES product(prod_id),
+  prod_id INT NOT NULL REFERENCES products(prod_id),
   order_id INT NOT NULL REFERENCES orders(order_id),
   CHECK (quantity > 0)
 );
@@ -73,7 +73,7 @@ CREATE TABLE delivery_stops (
   stop_num INT NOT NULL,
   time_delivered TIMESTAMPTZ,
   tracking_id INT NOT NULL REFERENCES delivery_run(tracking_id),
-  order_id INT NOT NULL REFERENCES orders(order_id),
+  order_id INT UNIQUE NOT NULL REFERENCES orders(order_id),
   CHECK (stop_num > 0),
   UNIQUE (tracking_id, stop_num)
 );
@@ -83,31 +83,31 @@ CREATE INDEX idx_customer_first_name ON customer(customer_first_name);
 
 CREATE INDEX idx_customer_last_name ON customer(customer_last_name);
 
-CREATE INDEX idx_product_name ON product(prod_name);
+CREATE INDEX idx_product_name ON products(prod_name);
 
 CREATE INDEX idx_delivery_stops_time ON delivery_stops(time_delivered);
 
 -- INSERTs
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Mady', 'Hambribe', '9511 East Hill', 'mhambribe0@addthis.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Yalonda', 'Collacombe', '91769 Summit Court', 'ycollacombe1@123-reg.co.uk');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Joye', 'Whall', '045 Bayside Plaza', 'jwhall2@naver.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Boycie', 'Carp', '9108 Lukken Avenue', 'bcarp3@amazon.co.jp');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Guglielmo', 'Rudloff', '7 Maywood Crossing', 'grudloff4@jimdo.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Tabbie', 'Stribbling', '886 Toban Court', 'tstribbling5@hhs.gov');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Bentlee', 'Brunini', '3 Northfield Circle', 'bbrunini6@toplist.cz');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Simona', 'Bernucci', '1 Manley Park', 'sbernucci7@intel.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Jessee', 'Thrussell', '28520 Donald Lane', 'jthrussell8@amazon.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Kane', 'Vales', '054 Homewood Terrace', 'kvales9@java.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Francesca', 'Burgoyne', '077 Crescent Oaks Lane', 'fburgoynea@reuters.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Franchot', 'Messager', '54379 Jana Pass', 'fmessagerb@amazonaws.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Arturo', 'Lovitt', '01 Mosinee Pass', 'alovittc@japanpost.jp');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Jeffy', 'Ohrtmann', '9 Upham Pass', 'johrtmannd@tinyurl.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Hube', 'Dionis', '9143 Colorado Trail', 'hdionise@pen.io');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Pedro', 'Warboy', '04988 Manitowish Point', 'pwarboyf@wp.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Steward', 'Kennefick', '38 Petterle Way', 'skennefickg@google.ru');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Bond', 'Boddington', '0 Golf View Plaza', 'bboddingtonh@nba.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Trefor', 'Gruszecki', '30472 Red Cloud Center', 'tgruszeckii@hp.com');
-INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email) VALUES ('Viva', 'Conkay', '1568 Montana Hill', 'vconkayj@booking.com');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Mady', 'Hambribe', '9511 East Hill', 'mhambribe0@addthis.com','01049769736');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Yalonda', 'Collacombe', '91769 Summit Court', 'ycollacombe1@123-reg.co.uk','02424094563');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Joye', 'Whall', '045 Bayside Plaza', 'jwhall2@naver.com','05595419883');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Boycie', 'Carp', '9108 Lukken Avenue', 'bcarp3@amazon.co.jp','07236809900');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Guglielmo', 'Rudloff', '7 Maywood Crossing', 'grudloff4@jimdo.com','09034636438');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Tabbie', 'Stribbling', '886 Toban Court', 'tstribbling5@hhs.gov','02613199632');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Bentlee', 'Brunini', '3 Northfield Circle', 'bbrunini6@toplist.cz','02838793964');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Simona', 'Bernucci', '1 Manley Park', 'sbernucci7@intel.com','07902579000');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Jessee', 'Thrussell', '28520 Donald Lane', 'jthrussell8@amazon.com','01637992138');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Kane', 'Vales', '054 Homewood Terrace', 'kvales9@java.com','01799896401');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Francesca', 'Burgoyne', '077 Crescent Oaks Lane', 'fburgoynea@reuters.com','05262932965');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Franchot', 'Messager', '54379 Jana Pass', 'fmessagerb@amazonaws.com','04871819459');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Arturo', 'Lovitt', '01 Mosinee Pass', 'alovittc@japanpost.jp','09245059686');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Jeffy', 'Ohrtmann', '9 Upham Pass', 'johrtmannd@tinyurl.com','06667016884');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Hube', 'Dionis', '9143 Colorado Trail', 'hdionise@pen.io','07178362530');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Pedro', 'Warboy', '04988 Manitowish Point', 'pwarboyf@wp.com','01771614925');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Steward', 'Kennefick', '38 Petterle Way', 'skennefickg@google.ru','05222632075');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Bond', 'Boddington', '0 Golf View Plaza', 'bboddingtonh@nba.com','06673990328');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Trefor', 'Gruszecki', '30472 Red Cloud Center', 'tgruszeckii@hp.com','06005175079');
+INSERT INTO customer (customer_first_name, customer_last_name, customer_address, customer_email, customer_phone_number) VALUES ('Viva', 'Conkay', '1568 Montana Hill', 'vconkayj@booking.com','01307171825');
 
 INSERT INTO outlet (outlet_address, customer_id) VALUES ('9444 Ridgeview Crossing', 1);
 INSERT INTO outlet (outlet_address, customer_id) VALUES ('21999 Buena Vista Lane', 2);
@@ -140,35 +140,35 @@ INSERT INTO outlet (outlet_address, customer_id) VALUES ('3009 Brentwood Way', 8
 INSERT INTO outlet (outlet_address, customer_id) VALUES ('4 Waywood Lane', 9);
 INSERT INTO outlet (outlet_address, customer_id) VALUES ('90049 Onsgard Park', 10);
 
-INSERT INTO product (prod_name, prod_price) VALUES ('Cheese - St. Andre', 44.97);
-INSERT INTO product (prod_name, prod_price) VALUES ('Foam Espresso Cup Plain White', 48.1);
-INSERT INTO product (prod_name, prod_price) VALUES ('Laundry - Bag Cloth', 43.39);
-INSERT INTO product (prod_name, prod_price) VALUES ('Wine - Pinot Noir Stoneleigh', 10.02);
-INSERT INTO product (prod_name, prod_price) VALUES ('Artichokes - Knobless, White', 98.49);
-INSERT INTO product (prod_name, prod_price) VALUES ('Muffin Chocolate Individual Wrap', 72.8);
-INSERT INTO product (prod_name, prod_price) VALUES ('Rice - Sushi', 0.51);
-INSERT INTO product (prod_name, prod_price) VALUES ('Eggs - Extra Large', 38.39);
-INSERT INTO product (prod_name, prod_price) VALUES ('Cream - 18%', 41.52);
-INSERT INTO product (prod_name, prod_price) VALUES ('Club Soda - Schweppes, 355 Ml', 59.07);
-INSERT INTO product (prod_name, prod_price) VALUES ('Extract - Vanilla,artificial', 89.33);
-INSERT INTO product (prod_name, prod_price) VALUES ('Pepper - Green Thai', 44.2);
-INSERT INTO product (prod_name, prod_price) VALUES ('Beans - Navy, Dry', 35.82);
-INSERT INTO product (prod_name, prod_price) VALUES ('Appetizer - Smoked Salmon / Dill', 41.45);
-INSERT INTO product (prod_name, prod_price) VALUES ('Sage - Ground', 14.27);
-INSERT INTO product (prod_name, prod_price) VALUES ('Ice Cream Bar - Oreo Sandwich', 81.4);
-INSERT INTO product (prod_name, prod_price) VALUES ('Chocolate - Pistoles, Lactee, Milk', 37.21);
-INSERT INTO product (prod_name, prod_price) VALUES ('Oysters - Smoked', 34.84);
-INSERT INTO product (prod_name, prod_price) VALUES ('Lettuce - Belgian Endive', 70.15);
-INSERT INTO product (prod_name, prod_price) VALUES ('Pork - Caul Fat', 13.87);
-INSERT INTO product (prod_name, prod_price) VALUES ('Pepsi - Diet, 355 Ml', 7.02);
-INSERT INTO product (prod_name, prod_price) VALUES ('Onions - White', 80.76);
-INSERT INTO product (prod_name, prod_price) VALUES ('Plaintain', 69.04);
-INSERT INTO product (prod_name, prod_price) VALUES ('Beer - Heinekin', 1.44);
-INSERT INTO product (prod_name, prod_price) VALUES ('Split Peas - Green, Dry', 98.43);
-INSERT INTO product (prod_name, prod_price) VALUES ('Spring Roll Wrappers', 19.26);
-INSERT INTO product (prod_name, prod_price) VALUES ('Soup - Campbells Beef Stew', 60.99);
-INSERT INTO product (prod_name, prod_price) VALUES ('Ecolab - Hobart Washarm End Cap', 69.87);
-INSERT INTO product (prod_name, prod_price) VALUES ('Croissants Thaw And Serve', 39.3);
+INSERT INTO products (prod_name, prod_price) VALUES ('Cheese - St. Andre', 44.97);
+INSERT INTO products (prod_name, prod_price) VALUES ('Foam Espresso Cup Plain White', 48.1);
+INSERT INTO products (prod_name, prod_price) VALUES ('Laundry - Bag Cloth', 43.39);
+INSERT INTO products (prod_name, prod_price) VALUES ('Wine - Pinot Noir Stoneleigh', 10.02);
+INSERT INTO products (prod_name, prod_price) VALUES ('Artichokes - Knobless, White', 98.49);
+INSERT INTO products (prod_name, prod_price) VALUES ('Muffin Chocolate Individual Wrap', 72.8);
+INSERT INTO products (prod_name, prod_price) VALUES ('Rice - Sushi', 0.51);
+INSERT INTO products (prod_name, prod_price) VALUES ('Eggs - Extra Large', 38.39);
+INSERT INTO products (prod_name, prod_price) VALUES ('Cream - 18%', 41.52);
+INSERT INTO products (prod_name, prod_price) VALUES ('Club Soda - Schweppes, 355 Ml', 59.07);
+INSERT INTO products (prod_name, prod_price) VALUES ('Extract - Vanilla,artificial', 89.33);
+INSERT INTO products (prod_name, prod_price) VALUES ('Pepper - Green Thai', 44.2);
+INSERT INTO products (prod_name, prod_price) VALUES ('Beans - Navy, Dry', 35.82);
+INSERT INTO products (prod_name, prod_price) VALUES ('Appetizer - Smoked Salmon / Dill', 41.45);
+INSERT INTO products (prod_name, prod_price) VALUES ('Sage - Ground', 14.27);
+INSERT INTO products (prod_name, prod_price) VALUES ('Ice Cream Bar - Oreo Sandwich', 81.4);
+INSERT INTO products (prod_name, prod_price) VALUES ('Chocolate - Pistoles, Lactee, Milk', 37.21);
+INSERT INTO products (prod_name, prod_price) VALUES ('Oysters - Smoked', 34.84);
+INSERT INTO products (prod_name, prod_price) VALUES ('Lettuce - Belgian Endive', 70.15);
+INSERT INTO products (prod_name, prod_price) VALUES ('Pork - Caul Fat', 13.87);
+INSERT INTO products (prod_name, prod_price) VALUES ('Pepsi - Diet, 355 Ml', 7.02);
+INSERT INTO products (prod_name, prod_price) VALUES ('Onions - White', 80.76);
+INSERT INTO products (prod_name, prod_price) VALUES ('Plaintain', 69.04);
+INSERT INTO products (prod_name, prod_price) VALUES ('Beer - Heinekin', 1.44);
+INSERT INTO products (prod_name, prod_price) VALUES ('Split Peas - Green, Dry', 98.43);
+INSERT INTO products (prod_name, prod_price) VALUES ('Spring Roll Wrappers', 19.26);
+INSERT INTO products (prod_name, prod_price) VALUES ('Soup - Campbells Beef Stew', 60.99);
+INSERT INTO products (prod_name, prod_price) VALUES ('Ecolab - Hobart Washarm End Cap', 69.87);
+INSERT INTO products (prod_name, prod_price) VALUES ('Croissants Thaw And Serve', 39.3);
 
 
 INSERT INTO vehicle (van_plate, van_capacity) VALUES ('KJ23LXM', 458);
@@ -296,4 +296,50 @@ INSERT INTO order_line (quantity, prod_id, order_id) VALUES (3, 7, 42);
 INSERT INTO order_line (quantity, prod_id, order_id) VALUES (2, 25, 43);
 INSERT INTO order_line (quantity, prod_id, order_id) VALUES (5, 1, 44);
 INSERT INTO order_line (quantity, prod_id, order_id) VALUES (1, 11, 45);
+
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, NULL, 1, 1);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 1, 16);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, NULL, 1, 28);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (4, NULL, 1, 40);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, '2021-07-30 15:33:53', 2, 5);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, '2024-10-13 03:5:12', 2, 15);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, NULL, 2, 17);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (4, NULL, 2, 29);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (5, '2024-12-06 13:58:56', 2, 41);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, '2025-10-03 15:37:38', 3, 3);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 3, 13);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, '2022-11-13 04:55:12', 3, 18);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (4, '2024-01-08 00:47:06', 3, 30);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (5, NULL, 3, 42);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, NULL, 4, 7);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 4, 19);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, NULL, 4, 31);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (4, NULL, 4, 43);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, NULL, 5, 2);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 5, 14);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, '2024-08-03 21:51:38', 5, 20);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (4, '2022-10-04 23:31:38', 5, 32);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (5, NULL, 5, 44);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, NULL, 6, 6);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 6, 21);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, NULL, 6, 33);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (4, NULL, 6, 45);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, '2020-03-25 09:36:41', 7, 8);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, '2022-04-25 23:16:10', 7, 22);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, '2025-11-04 23:51:38', 7, 34);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, NULL, 8, 4);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 8, 23);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, NULL, 8, 35);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, '2020-06-30 04:06:32', 9, 9);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 9, 24);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, NULL, 9, 36);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, NULL, 10, 10);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 10, 25);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, NULL, 10, 37);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, NOW(), 11, 12);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 11, 26);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, NOW(), 11, 38);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (1, NULL, 12, 11);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (2, NULL, 12, 27);
+INSERT INTO delivery_stops (stop_num, time_delivered, tracking_id, order_id) VALUES (3, NULL, 12, 39);
 
